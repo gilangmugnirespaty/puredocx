@@ -24,12 +24,12 @@ module PureDocx
       io.add(file, path)
     end
 
-    def save_document_content(content, header, pagination_position)
-      document_colontitle!(header,              HEADER_TEMPLATE_PATH)
-      document_colontitle!(pagination_position, FOOTER_TEMPLATE_PATH)
+    def save_document_content(content, header, footer_options)
+      document_colontitle!({ content: header }, HEADER_TEMPLATE_PATH)
+      document_colontitle!(footer_options, FOOTER_TEMPLATE_PATH)
 
       io.get_output_stream(DOCUMENT_TEMPLATE_PATH) do |os|
-        os.write document_content(content, header, pagination_position)
+        os.write document_content(content, header, footer_options)
       end
     end
 
@@ -64,9 +64,9 @@ module PureDocx
       end
     end
 
-    def document_content(content, header, pagination_position)
-      header_reference = colontitle_reference_xml('headerReference', 'header1.xml') unless header.empty?
-      footer_reference = colontitle_reference_xml('footerReference', 'footer1.xml') if pagination_position
+    def document_content(content, header, footer_options)
+      header_reference = colontitle_ref_xml('headerReference', 'header1.xml') unless header.empty?
+      footer_reference = colontitle_ref_xml('footerReference', 'footer1.xml') unless footer_options.empty?
 
       File.read(self.class.template_path(DOCUMENT_TEMPLATE_PATH)).tap do |document_content|
         document_content.gsub!('{HEADER}',  header_reference || '')
@@ -75,13 +75,15 @@ module PureDocx
       end
     end
 
-    def document_colontitle!(content, content_path)
+    def document_colontitle!(collection, content_path)
       content_xml = File.read(self.class.template_path(content_path))
-      content_xml.gsub!('{CONTENT}', content || '')
+      collection.each do |key, value|
+        content_xml.gsub!("{#{key.upcase}}", value || '')
+      end
       io.get_output_stream(content_path) { |os| os.write content_xml }
     end
 
-    def colontitle_reference_xml(reference_name, file_name)
+    def colontitle_ref_xml(reference_name, file_name)
       <<-HEREDOC.gsub(/\s+/, ' ').strip
         <w:#{reference_name}
         r:id="rId#{word_rels.keys.index(file_name)}"
