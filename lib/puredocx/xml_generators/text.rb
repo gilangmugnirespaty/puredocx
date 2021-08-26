@@ -5,24 +5,26 @@ module PureDocx
     class Text < Base
       DEFAULT_TEXT_SIZE  = 28
       DEFAULT_TEXT_ALIGN = 'left'.freeze
-      attr_reader :bold_enable, :italic_enable, :align, :size
+      attr_reader :bold_enable, :italic_enable, :align, :size, :underline_enable
 
       def initialize(content, rels_constructor, arguments = {})
         super(nil, rels_constructor)
-        @content       = CGI.escapeHTML(content)
-        @bold_enable   = [*arguments[:style]].include?(:bold)
-        @italic_enable = [*arguments[:style]].include?(:italic)
-        @align         = arguments[:align] || DEFAULT_TEXT_ALIGN
-        @size          = arguments[:size]  || DEFAULT_TEXT_SIZE
+        @content          = CGI.escapeHTML(content)
+        @bold_enable      = [*arguments[:style]].include?(:bold)
+        @italic_enable    = [*arguments[:style]].include?(:italic)
+        @underline_enable = [*arguments[:style]].include?(:underline)
+        @align            = arguments[:align] || DEFAULT_TEXT_ALIGN
+        @size             = arguments[:size]  || DEFAULT_TEXT_SIZE
       end
 
       def params
         {
-          '{TEXT}'          => content,
-          '{ALIGN}'         => align,
-          '{BOLD_ENABLE}'   => bold_enable,
-          '{ITALIC_ENABLE}' => italic_enable,
-          '{SIZE}'          => size
+          '{TEXT}'             => content,
+          '{ALIGN}'            => align,
+          '{BOLD_ENABLE}'      => bold_enable,
+          '{ITALIC_ENABLE}'    => italic_enable,
+          '{UNDERLINE_ENABLE}' => underline_enable,
+          '{SIZE}'             => size
         }
       end
 
