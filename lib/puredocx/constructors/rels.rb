@@ -8,6 +8,7 @@ module PureDocx
         'docProps/app.xml'  => "#{DOCUMENT_RELATIONSHIPS}extended-properties"
       }.freeze
       WORD_RELS = {
+        'numbering.xml'     => "#{DOCUMENT_RELATIONSHIPS}numbering",
         'endnotes.xml'      => "#{DOCUMENT_RELATIONSHIPS}endnotes",
         'footnotes.xml'     => "#{DOCUMENT_RELATIONSHIPS}footnotes",
         'header1.xml'       => "#{DOCUMENT_RELATIONSHIPS}header",
