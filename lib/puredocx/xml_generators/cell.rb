@@ -15,7 +15,8 @@ module PureDocx
       def params
         {
           '{CONTENT}' => content[:column].map(&:chomp).join,
-          '{WIDTH}'   => width
+          '{WIDTH}'   => width,
+          '{COL_SPAN}' => content[:col_span]
         }
       end
     end
