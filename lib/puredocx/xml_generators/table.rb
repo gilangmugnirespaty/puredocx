@@ -76,16 +76,13 @@ module PureDocx
       def ensure_columns_count!
         check_columns_count = table_content.any? do |row|
           if row.size < columns_count
-            if row.map{|col| col[:col_span].to_i}.sum == columns_count
-              return false
-            else
-              return true
-            end
+            row.map{|col| col[:col_span].to_i}.sum != columns_count
           elsif row.size != columns_count
             return true
           end
         end
-
+        puts "columns_width.size #{columns_width.size}"
+        puts "columns_count #{columns_count}"
         return unless check_columns_count || columns_width.size != columns_count
         raise TableColumnsCountError, 'Wrong table columns count!'
       end

@@ -19,9 +19,6 @@ module PureDocx
         @list_num_id      = arguments.has_key?(:list_level) ? '2' : ''
         @align            = arguments[:align] || DEFAULT_TEXT_ALIGN
         @size             = arguments[:size]  || DEFAULT_TEXT_SIZE
-
-        puts "list level #{list_level}"
-        puts "list num id #{list_num_id}"
       end
 
       def params
